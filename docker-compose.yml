@@ -1,0 +1,49 @@
+# Run with: docker compose up --build
+# Frontend: http://localhost:3000
+# Backend:  http://localhost:8000/docs
+# MySQL:    localhost:3306 (from your host machine, e.g. via PyCharm/TablePlus)
+
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: task_board
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ../taskpilot-api
+    environment:
+      # Note: host is "db" (the compose service name above), not "localhost" —
+      # containers reach each other by service name over the compose network.
+      DATABASE_URL: mysql+aiomysql://root:123456@db:3306/task_board?charset=utf8
+      GROQ_API_KEY: ${GROQ_API_KEY}
+      JWT_SECRET: ${JWT_SECRET}
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ../taskpilot
+      args:
+        VITE_API_URL: http://localhost:8000
+    ports:
+      - "3001:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
