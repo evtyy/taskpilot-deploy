@@ -20,7 +20,7 @@ services:
       retries: 10
 
   backend:
-    build: ../taskpilot-backend
+    build: ../taskpilot-api
     environment:
       # Note: host is "db" (the compose service name above), not "localhost" —
       # containers reach each other by service name over the compose network.

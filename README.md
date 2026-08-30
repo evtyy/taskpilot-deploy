@@ -2,7 +2,7 @@
 
 Orchestration and deployment tooling for TaskPilot: a `docker-compose.yml` for running the full stack locally, and the pieces used to build/push/deploy it to AWS.
 
-This deliberately lives in its own repo, separate from the app code, because the frontend and backend are versioned and deployed independently (each has its own GitHub Actions workflow — see [taskpilot-frontend](https://github.com/evtyy/taskpilot-frontend) and [taskpilot-backend](https://github.com/evtyy/taskpilot-backend)). This repo is the thing that wires them together.
+This deliberately lives in its own repo, separate from the app code, because the frontend and backend are versioned and deployed independently (each has its own GitHub Actions workflow — see [taskpilot-frontend](https://github.com/evtyy/taskpilot-frontend) and [taskpilot-api](https://github.com/evtyy/taskpilot-api)). This repo is the thing that wires them together.
 
 ## Layout this expects
 
@@ -11,7 +11,7 @@ Clone all three repos as siblings:
 ```
 some-folder/
 ├── taskpilot-frontend/
-├── taskpilot-backend/
+├── taskpilot-api/
 └── taskpilot-deploy/     # this repo
 ```
 
@@ -27,7 +27,7 @@ docker compose up --build
 - Backend docs: `http://localhost:8000/docs`
 - MySQL: `localhost:3307` (user `root`, password `123456`)
 
-`docker-compose.yml` builds the frontend and backend from `../taskpilot-frontend` and `../taskpilot-backend` — it doesn't pull prebuilt images, so local changes to either repo are picked up on rebuild.
+`docker-compose.yml` builds the frontend and backend from `../taskpilot-frontend` and `../taskpilot-api` — it doesn't pull prebuilt images, so local changes to either repo are picked up on rebuild.
 
 ## Production
 
