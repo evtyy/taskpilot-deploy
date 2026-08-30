@@ -21,7 +21,7 @@ echo "Logging in to ECR..."
 aws ecr get-login-password --region "$AWS_REGION" | docker login --username AWS --password-stdin "$ECR_REGISTRY"
 
 echo "Building backend image..."
-docker build --platform linux/amd64 -t taskpilot-backend "$SCRIPT_DIR/../taskpilot-api"
+docker build --platform linux/amd64 -t taskpilot-backend "$SCRIPT_DIR/../taskpilot-backend"
 
 echo "Building frontend image..."
 # VITE_API_URL is baked in at BUILD time — this must be the address the
@@ -29,7 +29,7 @@ echo "Building frontend image..."
 # and not the internal ECR/RDS hostname.
 docker build --platform linux/amd64 -t taskpilot-frontend \
   --build-arg VITE_API_URL="http://${EC2_PUBLIC_IP}:8000" \
-  "$SCRIPT_DIR/../taskpilot"
+  "$SCRIPT_DIR/../taskpilot-frontend"
 
 echo "Tagging images for ECR..."
 docker tag taskpilot-backend:latest "${ECR_REGISTRY}/taskpilot-backend:latest"

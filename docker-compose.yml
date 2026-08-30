@@ -20,7 +20,7 @@ services:
       retries: 10
 
   backend:
-    build: ../taskpilot-api
+    build: ../taskpilot-backend
     environment:
       # Note: host is "db" (the compose service name above), not "localhost" —
       # containers reach each other by service name over the compose network.
@@ -36,7 +36,7 @@ services:
 
   frontend:
     build:
-      context: ../taskpilot
+      context: ../taskpilot-frontend
       args:
         VITE_API_URL: http://localhost:8000
     ports:
